@@ -1,9 +1,9 @@
 class CreateReviews < ActiveRecord::Migration[6.0]
   def change
-    create table :reviews do |f|
-      f.string :content
-      f.integer :user_id
-      f.integer :movie_id
+    create_table :reviews do |table|
+      table.string :content
+      table.integer :user_id
+      table.integer :movie_id
     end
   end
 end
