@@ -12,3 +12,4 @@ puts "Welcome to Movie Buff!".colorize(:red)
 
 
 end
+binding.pry
