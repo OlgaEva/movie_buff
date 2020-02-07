@@ -1,3 +1,6 @@
+.gitignore
+script.rb
+
 .DS_Store
 .idea
 
