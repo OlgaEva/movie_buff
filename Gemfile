@@ -12,6 +12,7 @@ gem "faker"
 gem "tty-prompt"
 gem "rest-client"
 gem 'colorize', '~> 0.7.3'
+gem 'omdb-api'
 
 
 # source "https://rubygems.org"
