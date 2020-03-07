@@ -102,6 +102,8 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
             menu.choice "3- Update one of my reviews", -> do 
                 if @current_user.reviews == []
                     puts "You can't update a review; you don't have any yet".colorize(:red)
+                    review_selection
+
                     exit_program_method
 
                 else
