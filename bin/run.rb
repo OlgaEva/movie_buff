@@ -1,6 +1,5 @@
 require_relative '../config/environment'
 require_relative '../script.rb'
-# require 'rest-client'
 require 'pry'
 require 'json'
 require 'tty-prompt'
@@ -81,20 +80,23 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
         @current_user = User.create(name: new_users)
 
     end
-# binding.pry
 
     def returning_user_first_selection
 
         @prompt.select("What would you like to do?") do |menu|
             menu.choice "1- Create a new movie review", -> do 
                 user_response = @prompt.ask("What movie would you like to review?")
-                # binding.pry
+                
                 searchMovieApi(user_response)
             end
 
             menu.choice "2- Read all movie reviews", -> do 
+                if Review.all == []
+                    puts "There are no reviews for you to read, yet... Create one, why don't you?"
+                
+                else
                 review_selection
-
+                end
             end
 
             menu.choice "3- Update one of my reviews", -> do 
@@ -122,7 +124,12 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
             end
 
             menu.choice "2- Read all moview reviews", -> do 
+                if Review.all == []
+                    puts "There are no reviews for you to read, yet... Create one, why don't you?"
+                else
                 review_selection
+                end
+              
                 exit_program_method
             end
 
@@ -146,29 +153,10 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
     def review_selection
         choices = Review.all.map {|review| review.content}
         puts ("These are all movie reviews we have, so far...")
-        # chosen_review =  @prompt.select("These are all movie reviews we have, so far...", choices) 
+        puts choices
+  
         exit_program_method
-        binding.pry
-        # puts Review.find_by(content: content)
-        # id_of_chosen_review = Review.find_by(content: content).id
-        # binding.pry
-
-#     variable = Review.find_by(id: id_of_chosen_review)
-#     puts variable.comments.map {|cont| cont.contributions}
-       
-#    @prompt.select("Would you like to add a comment?") do |menu|
-#     menu.choice "Yes", -> do
-#         user_comment = @current_user.name + " -> " + gets.chomp
-#         new_comment = Comment.create(forum_id: id_of_chosen_forum , contributions: user_comment, user_id: @current_user.id)
-#         puts "Your comment has been posted.".colorize(:red)
-#         exit_program_method
               
-    #   end
-      
-    # menu.choice "No", -> {returning_user_first_selection}
-
-#    end 
-            exit_program_method
     end
 
     def all_my_reviews
@@ -177,11 +165,12 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
         
         selected_review = @prompt.select("Here are your reviews:", choices)
         
-        selected_review_id = Review.find_by(review_title: selected_review).id
+        selected_review_id = Review.find_by(review_content: selected_review).id
         
         @prompt.select ("What would you like to do?") do |menu|
             menu.choice "1 -Edit Review", -> do 
          
+            to_edit = Review.find_by(review)
             exit_program_method
 
             end
@@ -189,24 +178,16 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
         menu.choice "2 - Delete my review", -> do
 
             variable = Review.find_by(id: selected_review_id)
-            selected_review_for_user = @prompt.select("Choose a review to edit", choices)
-            # to_edit = Review.find_by(review)
+            selected_review_for_user = @prompt.select("Choose a review to be deleted", choices)
+            to_be_deleted = Review.find_by(reviews: selected_review_for_user)
+            to_be_deleted.destroy
             
             #     reviews_belonging_to_user = variable.map {|cont| cont.contributions}
             #  if  
             #     comments_belonging_to_user == []
             #     puts "You do not have any comments to delete.".colorize(:red)
-                    exit_program_method
-                
-            
-                
-                choices = reviews_belonging_to_user
-            
-                selected_comment_for_user = @prompt.select("Choose a comment to be deleted", choices)
-                to_be_deleted = Review.find_by(reviews: selected_comment_for_user)
-                
-                to_be_deleted.destroy
-                exit_program_method
+            puts "Your review has been deleted.".colorize(:red)
+            exit_program_method
             
         end
 
@@ -214,7 +195,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
         exit_program_method
         # to_destroy.destroy # deletes forum in DB
         # @current_user.reviews.destroy(to_destroy)# delete forum from instance variable
-            puts "Your review has been deleted.".colorize(:red)
+    
         returning_user_first_selection
 
         }
@@ -225,7 +206,7 @@ end
     def searchMovieApi(title_search)
 
         client = Omdb::Api::Client.new(api_key: API_KEY)
-        # client.search(title_search)    
+         
         movie_search = client.search(title_search)
 
         movie_titles = movie_search.movies.map { |movie| movie.title }
@@ -235,16 +216,12 @@ end
         selected = @prompt.select("Choose a movie title", choices)
 
         created_movie = Movie.create(title: selected)
-        # binding.pry 
-
+    
         new_review = "#{@current_user.name}" + " reviewed " + "#{created_movie.title}" + " thusly: " + @prompt.ask("What did you think about this movie?").colorize(:blue)
 
             new_review_to_table(new_review, created_movie.id)
             exit_program_method
-
-        binding.pry 
     end
-
 end
 
 cli = MovieBuff.new
