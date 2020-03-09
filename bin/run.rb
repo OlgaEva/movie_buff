@@ -93,6 +93,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
             menu.choice "2- Read all movie reviews", -> do 
                 if Review.all == []
                     puts "There are no reviews for you to read, yet... Create one, why don't you?"
+                    returning_user_first_selection
                 
                 else
                 review_selection
@@ -104,7 +105,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
                     puts "You can't update a review; you don't have any yet".colorize(:red)
                     review_selection
 
-                    exit_program_method
+                    # exit_program_method
 
                 else
                     all_my_reviews
@@ -162,41 +163,43 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
     end
 
     def all_my_reviews
+        # binding.pry
     
         choices = @current_user.reviews.map {|review| review.content}
         
         selected_review = @prompt.select("Here are your reviews:", choices)
+        # binding.pry 
         
-        selected_review_id = Review.find_by(review_content: selected_review).id
+        selected_review_id = Review.find_by(content: selected_review).id
         
         @prompt.select ("What would you like to do?") do |menu|
-            menu.choice "1 -Edit Review", -> do 
+            menu.choice "1- Edit Review", -> do 
          
-            to_edit = Review.find_by(review)
-            exit_program_method
+            to_edit = Review.find(selected_review_id)
+            puts "Change your review as you please: "
+            updated = gets.chomp
 
+            to_edit.content = ("#{@current_user.name}" + " reviewed " + "#{to_edit.movie.title}" + " thusly: " + updated.colorize(:blue))
+            to_edit.save
+            
+            exit_program_method
             end
 
-        menu.choice "2 - Delete my review", -> do
+        menu.choice "2- Delete my review", -> do
 
-            variable = Review.find_by(id: selected_review_id)
+            variable = Review.find(selected_review_id)
+            # binding.pry
             selected_review_for_user = @prompt.select("Choose a review to be deleted", choices)
-            to_be_deleted = Review.find_by(reviews: selected_review_for_user)
+            to_be_deleted = Review.find(selected_review_id)
+            # binding.pry
             to_be_deleted.destroy
             
-            #     reviews_belonging_to_user = variable.map {|cont| cont.contributions}
-            #  if  
-            #     comments_belonging_to_user == []
-            #     puts "You do not have any comments to delete.".colorize(:red)
             puts "Your review has been deleted.".colorize(:red)
             exit_program_method
             
         end
 
         menu.choice "3- Go Back", -> {to_destroy = Review.find_by(review_title: selected_review)
-        exit_program_method
-        # to_destroy.destroy # deletes forum in DB
-        # @current_user.reviews.destroy(to_destroy)# delete forum from instance variable
     
         returning_user_first_selection
 
