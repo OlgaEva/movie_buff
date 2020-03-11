@@ -47,6 +47,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
     def initialize 
         @prompt = TTY::Prompt.new
         @current_user = nil 
+        fork{ exec 'afplay', "audio/383755__deleted-user-7146007__inception-style-movie-horn.wav"}
     end
 
     def everyone_first_interaction
@@ -146,6 +147,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
         @prompt.select("Would you like to end this session?") do |menu|
             menu.choice ("Yes"), -> {puts "Goodbye! Thank you for participating in MovieBuff!".colorize(:red)}
             menu.choice ("No"), -> {returning_user_first_selection}
+            fork{ exec 'afplay', "audio/165109__rickeyc__low-movie-boom.mp3"}
         end
     end
 
@@ -157,6 +159,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
 
     def review_selection
         choices = Review.all.map {|review| review.content}
+        fork{ exec 'afplay', "audio/251254__ekvelika__movie-piano-theme-em.wav.crdownload"}
         puts ("These are all movie reviews we have, so far...")
         puts choices
   
@@ -165,12 +168,11 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
     end
 
     def all_my_reviews
-        # binding.pry
+        fork{ exec 'afplay', "audio/261218__stereo-surgeon__guns-in-the-parking-lot-bass-loop.wav.crdownload"}
     
         choices = @current_user.reviews.map {|review| review.content}
         
         selected_review = @prompt.select("Here are your reviews:", choices)
-        # binding.pry 
         
         selected_review_id = Review.find_by(content: selected_review).id
         
