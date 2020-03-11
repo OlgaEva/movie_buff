@@ -97,6 +97,8 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
                 
                 else
                 review_selection
+
+                exit_program_method
                 end
             end
 
@@ -105,7 +107,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
                     puts "You can't update a review; you don't have any yet".colorize(:red)
                     review_selection
 
-                    # exit_program_method
+                    exit_program_method
 
                 else
                     all_my_reviews
@@ -136,7 +138,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
                 exit_program_method
             end
 
-            # menu.choice "3- Exit", -> {exit_program_method}
+            menu.choice "3- Exit", -> {exit_program_method}
         end
     end
 
@@ -158,7 +160,7 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
         puts ("These are all movie reviews we have, so far...")
         puts choices
   
-        exit_program_method
+        # exit_program_method
               
     end
 
@@ -199,11 +201,11 @@ _ _____  _ _ _  ___ __________/ /              \\ \\____________________________
             
         end
 
-        menu.choice "3- Go Back", -> {to_destroy = Review.find_by(review_title: selected_review)
+        menu.choice "3- Go Back", -> do
     
-        returning_user_first_selection
+            returning_user_first_selection
 
-        }
+        end
     end
 end
 
