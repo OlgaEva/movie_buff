@@ -2,7 +2,7 @@
 source "https://rubygems.org"
 
 gem "sinatra-activerecord"
-gem 'activerecord', "~>5.2.3"
+gem 'activerecord', "~>6.1.7"
 gem "bundler"
 gem "sqlite3"
 gem "pry"
